@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ffcc00", "id": "https://w3id.org/gcdfo/salmon#AlgorithmThreshold", "label": "Algorithm threshold", "shape": "dot", "title": "Algorithm threshold\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e focus\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#AlgorithmThreshold"}, {"color": "#1f77b4", "id": "http://purl.obolibrary.org/obo/IAO_0000030", "label": "information content entity", "shape": "dot", "title": "information content entity\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e ancestor\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.obolibrary.org/obo/IAO_0000030"}, {"color": "#1f77b4", "id": "http://purl.obolibrary.org/obo/BFO_0000031", "label": "generically dependent continuant", "shape": "dot", "title": "generically dependent continuant\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e ancestor\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.obolibrary.org/obo/BFO_0000031"}, {"color": "#2ca02c", "id": "http://purl.obolibrary.org/obo/IAO_0000033", "label": "directive information entity", "shape": "dot", "title": "directive information entity\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.obolibrary.org/obo/IAO_0000033"}, {"color": "#2ca02c", "id": "http://purl.obolibrary.org/obo/IAO_0000104", "label": "plan specification", "shape": "dot", "title": "plan specification\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.obolibrary.org/obo/IAO_0000104"}, {"color": "#2ca02c", "id": "http://purl.obolibrary.org/obo/IAO_0000109", "label": "measurement datum", "shape": "dot", "title": "measurement datum\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.obolibrary.org/obo/IAO_0000109"}, {"color": "#2ca02c", "id": "http://purl.dataone.org/odo/ECSO_00002050", "label": "year of measurement", "shape": "dot", "title": "year of measurement\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.dataone.org/odo/ECSO_00002050"}, {"color": "#2ca02c", "id": "http://purl.dataone.org/odo/SALMON_00000479", "label": "Salmon escapement count", "shape": "dot", "title": "Salmon escapement count\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.dataone.org/odo/SALMON_00000479"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#ObservedRateOrAbundance", "label": "Observed rate or abundance", "shape": "dot", "title": "Observed rate or abundance\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#ObservedRateOrAbundance"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#TargetOrLimitRateOrAbundance", "label": "Target or limit rate or abundance", "shape": "dot", "title": "Target or limit rate or abundance\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#TargetOrLimitRateOrAbundance"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#EscapementMeasurement", "label": "Escapement measurement", "shape": "dot", "title": "Escapement measurement\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#EscapementMeasurement"}, {"color": "#2ca02c", "id": "http://purl.obolibrary.org/obo/IAO_0000310", "label": "document", "shape": "dot", "title": "document\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.obolibrary.org/obo/IAO_0000310"}, {"color": "#2ca02c", "id": "http://www.w3.org/ns/oa#Annotation", "label": "Annotation", "shape": "dot", "title": "Annotation\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://www.w3.org/ns/oa#Annotation"}, {"color": "#2ca02c", "id": "http://www.w3.org/ns/dqv#QualityAnnotation", "label": "Quality Annotation", "shape": "dot", "title": "Quality Annotation\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://www.w3.org/ns/dqv#QualityAnnotation"}, {"color": "#2ca02c", "id": "http://purl.dataone.org/odo/SALMON_00000167", "label": "Fish measurement type", "shape": "dot", "title": "Fish measurement type\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e http://purl.dataone.org/odo/SALMON_00000167"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#ReportingOrManagementStratum", "label": "Reporting or management stratum", "shape": "dot", "title": "Reporting or management stratum\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#ReportingOrManagementStratum"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#ConservationUnit", "label": "Conservation Unit", "shape": "dot", "title": "Conservation Unit\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#ConservationUnit"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#StockManagementUnit", "label": "Stock Management Unit", "shape": "dot", "title": "Stock Management Unit\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#StockManagementUnit"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#ReferencePoint", "label": "Reference point", "shape": "dot", "title": "Reference point\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#ReferencePoint"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#LimitReferencePoint", "label": "Limit reference point", "shape": "dot", "title": "Limit reference point\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#LimitReferencePoint"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#UpperStockReferencePoint", "label": "Upper stock reference", "shape": "dot", "title": "Upper stock reference\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#UpperStockReferencePoint"}, {"color": "#2ca02c", "id": "https://w3id.org/gcdfo/salmon#MetricBenchmark", "label": "Metric benchmark", "shape": "dot", "title": "Metric benchmark\u003cbr\u003e\u003cb\u003eRole:\u003c/b\u003e descendant\u003cbr\u003e\u003cb\u003eIRI:\u003c/b\u003e https://w3id.org/gcdfo/salmon#MetricBenchmark"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#AlgorithmThreshold"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/IAO_0000033"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/IAO_0000104"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/IAO_0000109"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/IAO_0000310"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "http://www.w3.org/ns/oa#Annotation"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "http://purl.dataone.org/odo/SALMON_00000167"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#ReportingOrManagementStratum"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#ReferencePoint"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000030", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#MetricBenchmark"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/BFO_0000031", "title": "subClassOf", "to": "http://purl.obolibrary.org/obo/IAO_0000030"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000109", "title": "subClassOf", "to": "http://purl.dataone.org/odo/ECSO_00002050"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000109", "title": "subClassOf", "to": "http://purl.dataone.org/odo/SALMON_00000479"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000109", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#ObservedRateOrAbundance"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000109", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#TargetOrLimitRateOrAbundance"}, {"arrows": "to", "from": "http://purl.obolibrary.org/obo/IAO_0000109", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#EscapementMeasurement"}, {"arrows": "to", "from": "http://www.w3.org/ns/oa#Annotation", "title": "subClassOf", "to": "http://www.w3.org/ns/dqv#QualityAnnotation"}, {"arrows": "to", "from": "https://w3id.org/gcdfo/salmon#ReportingOrManagementStratum", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#ConservationUnit"}, {"arrows": "to", "from": "https://w3id.org/gcdfo/salmon#ReportingOrManagementStratum", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#StockManagementUnit"}, {"arrows": "to", "from": "https://w3id.org/gcdfo/salmon#ReferencePoint", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#LimitReferencePoint"}, {"arrows": "to", "from": "https://w3id.org/gcdfo/salmon#ReferencePoint", "title": "subClassOf", "to": "https://w3id.org/gcdfo/salmon#UpperStockReferencePoint"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
