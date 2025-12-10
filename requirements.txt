@@ -1,0 +1,6 @@
+streamlit
+rdflib
+requests
+pandas
+networkx
+pyvis
